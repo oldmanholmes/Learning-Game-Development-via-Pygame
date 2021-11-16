@@ -34,7 +34,6 @@ while len(unique_id) < number:
         unique_id.append(num)
 
 enemies = [(unique_id[i],Enemy(map.spawn)) for i in range(number)]
-menu = Menu(settings.WINDOW_SIZE)
 game_instance = map.background
 # collision_l = [0]*len(monsters)
 
