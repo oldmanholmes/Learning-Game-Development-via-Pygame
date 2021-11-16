@@ -259,10 +259,10 @@ class Player():
             if self.player_attack1_index + self.increment*dt >= len(self.player_attack1_images_RIGHT):
                 self.player_attack1_cd = False
             if self.direction == "RIGHT":
-                self.player_attack1_range = range(self.rect.left, self.rect.x + 100)
+                self.player_attack1_range = range(self.rect.left, self.rect.right + 50)
                 self.image = self.player_attack1_images_RIGHT[int(self.player_attack1_index)]
             else:
-                self.player_attack1_range = range(self.rect.x - 100, self.rect.x)
+                self.player_attack1_range = range(self.rect.left - 200, self.rect.right)
                 self.image = self.player_attack1_images_LEFT[int(self.player_attack1_index)]
 
     def camera(self, dt, screen_res, map_res):
