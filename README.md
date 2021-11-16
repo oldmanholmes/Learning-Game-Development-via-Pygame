@@ -1,2 +1,4 @@
 # Learning-Game-Development-via-Pygame
-install python & pygame to run
+on-going personal side project <br />
+install python & pygame to run <br />
+
