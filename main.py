@@ -4,7 +4,6 @@ from player import *
 from functions import *
 from enemy import *
 from map import *
-from menu import *
 
 # initialize pygame settings
 pygame.init()
