@@ -1,31 +1,32 @@
 import pygame, os, sys, settings, random
 from functions import *
+from pathlib import Path
 
 class Player():
     def __init__(self, start_pos):
-        pygame.mixer.music.load("../Project_01_Game/map/audio/AboveTheTreetops.mp3")
+        self.relative_path = Path().absolute().as_posix()
+        pygame.mixer.music.load("{}".format(self.relative_path) + "/map/audio/AboveTheTreetops.mp3")
         pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.play(-1)
 
         self.start_pos = tuple(start_pos)
 
-        self.HP_globe = pygame.image.load("../Project_01_Game/ui/image/itsmars Health Orb/itsmars_orb_fill.png").convert_alpha()
+        self.HP_globe = pygame.image.load("{}".format(self.relative_path) + "/ui/image/itsmars Health Orb/itsmars_orb_fill.png").convert_alpha()
         self.HP_globe.fill((122,40,44), special_flags=pygame.BLEND_RGB_ADD)
-        self.HP_globe_back = pygame.image.load("../Project_01_Game/ui/image/itsmars Health Orb/itsmars_orb_back2.png").convert_alpha()
-        self.HP_globe_highlight = pygame.image.load("../Project_01_Game/ui/image/itsmars Health Orb/itsmars_orb_highlight.png").convert_alpha()
-        self.HP_globe_shadow = pygame.image.load("../Project_01_Game/ui/image/itsmars Health Orb/itsmars_orb_shadow.png").convert_alpha()
-        self.HP_globe_border = pygame.image.load("../Project_01_Game/ui/image/itsmars Health Orb/itsmars_orb_border.png").convert_alpha()
+        self.HP_globe_back = pygame.image.load("{}".format(self.relative_path) + "/ui/image/itsmars Health Orb/itsmars_orb_back2.png").convert_alpha()
+        self.HP_globe_highlight = pygame.image.load("{}".format(self.relative_path) + "/ui/image/itsmars Health Orb/itsmars_orb_highlight.png").convert_alpha()
+        self.HP_globe_shadow = pygame.image.load("{}".format(self.relative_path) + "/ui/image/itsmars Health Orb/itsmars_orb_shadow.png").convert_alpha()
+        self.HP_globe_border = pygame.image.load("{}".format(self.relative_path) + "/ui/image/itsmars Health Orb/itsmars_orb_border.png").convert_alpha()
         self.HP_globe_border_height = self.HP_globe_border.get_height()
 
-        player_idle_images = spritesheet("../Project_01_Game/player/image", "stand")
-        player_movement_images = spritesheet("../Project_01_Game/player/image", "walk")
-        player_jump_images = spritesheet("../Project_01_Game/player/image", "jump")
-        player_down_images = spritesheet("../Project_01_Game/player/image", "prone")
-        player_attack1_images = spritesheet("../Project_01_Game/player/image", "stabO2")
-        player_skill1_images = spritesheet("../Project_01_Game/player/skill/brandish", "1121008.effect.0")
+        player_idle_images = load_sprite_list("player", "stand", True)
+        player_movement_images = load_sprite_list("player","walk", True)
+        player_jump_images = load_sprite_list("player","jump", True)
+        player_down_images = load_sprite_list("player","prone", True)
+        player_attack1_images = load_sprite_list("player","stabO2", True)
 
         #load audio
-        self.hit_sound = pygame.mixer.Sound("../Project_01_Game/player/audio/hit.wav")
+        self.hit_sound = pygame.mixer.Sound("{}".format(self.relative_path) + "/player/audio/hit.wav")
         self.hit_sound.set_volume(0.1)
 
         #colors
@@ -43,7 +44,6 @@ class Player():
         self.global_attack_cd = 0
         self.flinch_counter = 0
         self.player_attack1_index = 0
-        self.player_skill1_index = 0
         self.player_index = 0
         self.test_var = 1000
         self.collision_cd = 0
@@ -68,15 +68,12 @@ class Player():
         self.player_walk_LEFT = player_movement_images
         self.player_walk_LEFT_offset = sprite_offset(self.player_walk_LEFT)
         self.player_stand_offset = sprite_offset(player_idle_images, player_movement_images)
-        self.player_skill1_images_LEFT = player_skill1_images
-        self.player_skill1_images_RIGHT= [pygame.transform.flip(x, True, False) for x in player_skill1_images]
         self.player_walk_RIGHT = [pygame.transform.flip(x, True, False) for x in player_movement_images]
         self.player_idle_LEFT = player_idle_images
         self.player_idle_RIGHT = [pygame.transform.flip(x, True, False) for x in player_idle_images]
         self.player_jump_LEFT = player_jump_images[0]
         self.player_jump_RIGHT = pygame.transform.flip(player_jump_images[0], True, False)
         self.image = self.player_walk_RIGHT[int(self.player_index)]
-        self.player_skill1_image = self.player_skill1_images_RIGHT[self.player_skill1_index]
         self.rect = self.image.get_rect(topleft=self.start_pos)
         self.player_attack1_images_LEFT = player_attack1_images
         self.player_attack1_images_RIGHT = [pygame.transform.flip(x, True, False) for x in player_attack1_images]
