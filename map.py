@@ -79,10 +79,6 @@ class Map():
 
     def draw(self, surface):
         self.mini_map_instance.blit(self.mini_map_background, (0,0))
-        # for tile in self.tile_1:
-        #     pygame.draw.rect(self.mini_map_instance, (0,0,0), (tile.x/(self.map_res[0]/self.width), tile.y/(self.map_res[1]/self.height), 1, 1))
-        # for tile in self.tile_3:
-        #     pygame.draw.rect(self.mini_map_instance, (0,0,0), (tile.x/(self.map_res[0]/self.width), tile.y/(self.map_res[1]/self.height), 1, 1))
         for i in self.enemy_pos:
             pygame.draw.rect(self.mini_map_instance, (255,0,0), (self.enemy_pos[i][0], self.enemy_pos[i][1], self.player_width, self.enemy_height))
         pygame.draw.rect(self.mini_map_instance, (0,0,255), (self.player_x, self.player_y, self.player_width, self.player_height))
