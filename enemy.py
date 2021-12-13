@@ -1,28 +1,22 @@
 from functions import *
 import random, json, os
+from pathlib import Path
 
 class Enemy():
     def __init__(self, spawn):
-
-        with open("../Project_01_Game/boss/updated.json", encoding = 'utf-8' ) as f:
+        self.relative_path = Path().absolute().as_posix()
+        with open("{}".format(self.relative_path) + "/boss/updated.json", encoding = 'utf-8' ) as f:
             data = json.load(f)
-
         self.name = data
-        print(spawn)
         #body1
-        body1_stand_images = [pygame.image.load("../Project_01_Game/boss/balrog/image/{}".format(i)).convert_alpha()
-        for i in os.listdir("../Project_01_Game/boss/balrog/image/") if i.startswith("{}".format('stand'))]
-        body1_move_images = [pygame.image.load("../Project_01_Game/boss/balrog/image/{}".format(i)).convert_alpha()
-        for i in os.listdir("../Project_01_Game/boss/balrog/image/") if i.startswith("{}".format('move'))]
-        body1_attack1_images = [pygame.image.load("../Project_01_Game/boss/balrog/image/{}".format(i)).convert_alpha()
-        for i in os.listdir("../Project_01_Game/boss/balrog/image/") if i.startswith("{}".format('attack1'))]
-        body1_attack2_images = [pygame.image.load("../Project_01_Game/boss/balrog/image/{}".format(i)).convert_alpha()
-        for i in os.listdir("../Project_01_Game/boss/balrog/image/") if i.startswith("{}".format('attack2'))]
-        body1_attack3_images = [pygame.image.load("../Project_01_Game/boss/balrog/image/{}".format(i)).convert_alpha()
-        for i in os.listdir("../Project_01_Game/boss/balrog/image/") if i.startswith("{}".format('attack3'))]
-        body1_death_images = [pygame.image.load("../Project_01_Game/boss/balrog/image/{}".format(i)).convert_alpha()
-        for i in os.listdir("../Project_01_Game/boss/balrog/image/") if i.startswith("{}".format('die'))]
-        self.body1_damaged_sound =  pygame.mixer.Sound("../Project_01_Game/boss/balrog/audio/CharDam3.wav")
+        body1_stand_images = load_sprite_list("balrog", "stand")
+        body1_move_images = load_sprite_list("balrog", "move")
+        body1_attack1_images = load_sprite_list("balrog", "attack1")
+        body1_attack2_images = load_sprite_list("balrog", "attack2")
+        body1_attack3_images = load_sprite_list("balrog", "attack3")
+        body1_death_images = load_sprite_list("balrog", "die")
+
+        self.body1_damaged_sound =  pygame.mixer.Sound("{}".format(self.relative_path) + "/boss/balrog/audio/CharDam3.wav")
         self.body1_damaged_sound.set_volume(0.1)
 
         self.sprite_offset_body1_stand = sprite_offset(body1_move_images, body1_stand_images)
@@ -250,7 +244,7 @@ class Enemy():
                         self.float_font = pygame.font.SysFont('Ariel', 150)
                         self.float_surf = self.float_font.render(str(hit[0][1]), True, (255, 0, 0))
                         self.float_surf.set_alpha(50)
-                        surface.blit(self.float_surf, (self.rect.x, self.rect.y))
+                        surface.blit(self.float_surf, (self.rect.x, self.rect.y-50))
 
     def health(self):
         if self.current_HP <= 0:
