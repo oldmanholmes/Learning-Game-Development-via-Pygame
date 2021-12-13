@@ -1,11 +1,6 @@
 from player import *
-import pygame
-
-#Function - Load Sprites
-def spritesheet(path, tag):
-    sprite_images = [pygame.image.load(path + "/{}".format(i)).convert_alpha()
-                    for i in os.listdir(path) if i.startswith("{}".format(tag))]
-    return sprite_images
+from pathlib import Path
+import pygame, os
 
 #Function - Checks Collision
 def collision_check(player, objects, counter):
@@ -17,6 +12,17 @@ def front_layer(player, screen_res, surface1, surface2):
     surface1.blit(surface2, (0 - player.scroll[0], 0 - player.scroll[1]))
     #pygame.draw.circle(surface1, (98,19,18), (0+radius, screen_res[1] - radius), radius, width=0)
     #pygame.draw.rect(surface1, player.HP_color, (0, screen_res[1] - 200, player.current_HP, 200))
+
+def load_sprite_list(enemy_id, action, player=False):
+    if player:
+        relative_path = Path().absolute().as_posix()
+        sprite_list = [pygame.image.load("{}".format(relative_path) + "/" + enemy_id + "/image/{}".format(i)).convert_alpha()
+                        for i in os.listdir("{}".format(relative_path) + "/" + enemy_id + "/image/") if i.startswith("{}".format(action))]
+    else:
+        relative_path = Path().absolute().as_posix()
+        sprite_list = [pygame.image.load("{}".format(relative_path) + "/boss/" + enemy_id + "/image/{}".format(i)).convert_alpha()
+                        for i in os.listdir("{}".format(relative_path) + "/boss/" + enemy_id + "/image/") if i.startswith("{}".format(action))]
+    return sprite_list
 
 #Function - Normalize width and height so sprites blit pos are synonymous
 def sprite_offset(sprites, sprites2=[]):
