@@ -1,46 +1,47 @@
 import pygame, os, json, random
+from pathlib import Path
 
 class Map():
     def __init__(self):
-        self.background_images_list = [i for i in os.listdir("../Project_01_Game/map/image/")]
-        self.background_images = [pygame.image.load("../Project_01_Game/map/image/{}".format(i)).convert_alpha() for i in self.background_images_list]
-        self.background_image = self.background_images[0]
+        self.relative_path = Path().absolute().as_posix()
+        with open("{}".format(self.relative_path) + "/map/data/config.json", encoding = 'utf-8' ) as f:
+            self.data = json.load(f)
+
+        self.current_map = self.data["map"]["0"]["img"]
+
+        self.tile_1_dict = {}
+        self.tile_1 = []
+        self.pixel = 6
+        for x in self.data["map"]["0"]["tile_1"][0]:
+            self.tile_1_dict[tuple([i for i in x])] = 1
+            self.tile_1.append(pygame.Rect(x[0]*self.pixel, x[1]*self.pixel, self.pixel, self.pixel))
+
+        self.tile_3_dict = {}
+        self.tile_3 = []
+        for x in self.data["map"]["0"]["tile_3"][0]:
+            self.tile_3_dict[tuple([i for i in x])] = 1
+            self.tile_3.append(pygame.Rect(x[0]*self.pixel, x[1]*self.pixel, self.pixel, self.pixel))
+
+        for x in self.data["map"]["0"]["start_pos"]:
+            self.start_pos = x
+
+        self.portals = {}
+        for x in self.data["map"]["0"]["portals"]:
+            self.portals[tuple([i for i in x])] = 1
+
+        self.spawn = []
+        for x in self.data["map"]["0"]["spawn"]:
+            self.spawn.append(x)
+
+        self.background_image = pygame.image.load("{}".format(self.relative_path) + "/map/image/{}".format(self.current_map)).convert_alpha()
         self.background_image.fill((0, 0, 128), special_flags=pygame.BLEND_RGB_ADD)
         self.map_res = (self.background_image.get_width(),self.background_image.get_height())
         self.background = pygame.Surface(self.map_res)
         self.hit = {}
         self.enemy_pos = {}
         self.enemy_check = {}
-        self.pixel = 6
-        self.tile_1_dict = {}
-        self.tile_1 = []
-        self.tile_3_dict = {}
-        self.tile_3 = []
-        self.portals = {}
-        self.spawn = []
 
-        with open("../Project_01_Game/map/data/config.json", encoding = 'utf-8' ) as f:
-            self.data = json.load(f)
-
-        for x in self.data["map"]["Entrance"]["tile_1"][0]:
-            self.tile_1_dict[tuple([i for i in x])] = 1
-            self.tile_1.append(pygame.Rect(x[0]*self.pixel, x[1]*self.pixel, self.pixel, self.pixel))
-
-        for x in self.data["map"]["Entrance"]["tile_3"][0]:
-            self.tile_3_dict[tuple([i for i in x])] = 1
-            self.tile_3.append(pygame.Rect(x[0]*self.pixel, x[1]*self.pixel, self.pixel, self.pixel))
-
-        for x in self.data["map"]["Entrance"]["start_pos"]:
-            self.start_pos = x
-
-        for x in self.data["map"]["Entrance"]["portals"]:
-            self.portals[tuple([i for i in x])] = 1
-            
-        for x in self.data["map"]["Entrance"]["spawn"]:
-            self.spawn.append(x)
-
-
-        self.moon = pygame.image.load("../Project_01_Game/map/misc/image/moon.png").convert_alpha()
+        self.moon = pygame.image.load("{}".format(self.relative_path) + "/map/misc/image/moon.png").convert_alpha()
         self.moon = pygame.transform.scale(self.moon, (150, 150))
         self.moon.fill((122,40,44), special_flags=pygame.BLEND_RGB_ADD)
         self.stars_n = 100
